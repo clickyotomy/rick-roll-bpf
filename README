@@ -1,0 +1,55 @@
+rick-roll-bpf
+-------------
+
+Intercepts the "openat" system call for "*.mp3" files and changes
+the "pathname[]" argument to "/tmp/rick-roll.mp3" using "fentry"
+hooks with an eBPF program.
+
+TL;DR: Do you want to see someone get RickRoll'D every time they play
+       an MP3 file on their machine? If the answer is yes - you are at
+       the right place (probably).
+
+HOW-TO
+  - Build and generate the binary ("rick-roll"):
+
+    $ make [V=(0|1) [BUILD_SHARED=(true|false)
+      [OBJ_DIR=<path> [BIN_DIR=<path>]]]]
+
+   +--------------+-------------------------------------------------+
+   | Argument     | Description                                     |
+   +--------------+-------------------------------------------------+
+   | V            | Output verbosity (0: disabled, 1: enabled);     |
+   |              | disabled by default.                            |
+   +--------------+-------------------------------------------------+
+   | BUILD_SHARED | Compile the binary with shared ("true") or      |
+   |              | static ("false") `libbpf` library; set to       |
+   |              | "true" by default.                              |
+   +--------------+-------------------------------------------------+
+   | OBJ_DIR      | Place intermediate objects at the given "path"; |
+   |              | default path is "./obj".                        |
+   +--------------+-------------------------------------------------+
+   | BIN_DIR      | Install the built binary at the given "path";   |
+   |              | default path is "./bin".                        |
+   +--------------+-------------------------------------------------+
+
+  - Change the watch extension from ".mp3", or the "pathname[]"
+    argument to something else:
+
+    Replace the following "#define" directives in the source:
+      * #define WATCH_EXT ".ext"
+      * #define REPL_PATH "/path/to/file"
+
+    Make sure that there is a file at "REPL_PATH".
+
+
+NOTES
+  - Please _don't_ run this in production environments.
+
+  - Works on "linux-5.8.0-25-generic" (x86_64).
+
+  - The "libbpf" directory is a submodule of this repository.
+    Running "git-clone" with "--recurse-submodules" will get
+    that as well.
+
+WHY
+  - I wanted to have some fun and learn a little bit about eBPF.
